@@ -15,7 +15,7 @@ meta_frame_summary, Fail_safe_N = calcul_meta_analysis.calcul_meta_analysis(meta
 The _**`meta_data.xlsx`**_ file will be loaded and processed for results calculation and graphical representation. These data were obtained directly from the articles cited in our study, or after contacting the authors to ask them. For more details, please see our article.
 
 # Methods
-Figure 1 shows in detail the theoretical basis used to perform the calculations. For more details on the meta-analyses, please see _**[3]**_
+Figure 1 shows in detail the theoretical basis used to perform the calculations. For more details on the meta-analyses, please see _**[3]**_. For effect size calculation, user can choose between Cohen's d, Glasse's delta or Hedge's g.
 
 ![](illustrations/Methods.png)
 
