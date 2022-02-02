@@ -18,7 +18,7 @@ import pandas as pd
 import sys
 sys.path.append(r"F:\GardyL\Python\Alzheimer_meta_analysis")
 from _calcul_random_effect import randomEffect_calculation
-from plot_results import plot_data_summary
+from _plot_results import plot_data_summary
 
 def calcul_meta_analysis(meta_frame):
 
