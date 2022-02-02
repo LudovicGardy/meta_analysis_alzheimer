@@ -1,0 +1,6 @@
+### Ignore these folders
+__pycache__/
+.vs/
+
+### Ignore these files
+project_presentation.pptx
