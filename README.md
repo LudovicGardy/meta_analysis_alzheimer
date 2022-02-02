@@ -5,7 +5,7 @@ Please, open _**`main.py`**_ and change the path inside to use the program.
 
 # Procedure example (main.py)
 ```
-meta_data = pd.read_excel(open(r'~/Data_meta.xlsx','rb'))
+meta_data = pd.read_excel(open(r'~/Meta_analysis_Alzheimer/Data_meta.xlsx','rb'))
 
 meta_frame = reshape_dataframe.reshape_dataframe(meta_data, authors_list)
 meta_frame_summary, Fail_safe_N = calcul_meta_analysis.calcul_meta_analysis(meta_frame)
