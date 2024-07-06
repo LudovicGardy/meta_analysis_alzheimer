@@ -86,7 +86,7 @@ def calculate_weights(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
     
     return(var_d, weight_of_the_study)
     
-def confidence_interval(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
+def calculate_confidence_interval(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
     
     # Calculations for equal sample sizes
     #-------------------------------------
@@ -171,7 +171,7 @@ if __name__ == '__main__':
     Cohens_D = calculate_Cohens_d(sampleMean_1, sampleSD_1, sampleMean_2, sampleSD_2)
     Glass_delta = calculate_Glass_delta(sampleMean_1, sampleMean_2, sampleSD_2)
     Hedges_g = calculate_Hedges_g(sampleMean_1, sampleMean_2, sampleSD_1, sampleSD_2, sampleSize_1, sampleSize_2)
-    CI95 = confidence_interval(sampleMean_1, sampleMean_2, sampleSD_1, sampleSD_2, sampleSize_1, sampleSize_2)
+    CI95 = calculate_confidence_interval(sampleMean_1, sampleMean_2, sampleSD_1, sampleSD_2, sampleSize_1, sampleSize_2)
     
     note = "\n #----------\n # Note\n #----------\n \n If the results are > 0, the score is higher in the control's goup. \n If the results are < 0, the score is higher in the disease's group."
     print(" \n #----------\n # Results\n #----------\n \n Cohen's d = {} \n Glass's delta = {} \n {} = {} \n 95% CI = {} \n {}".format(Cohens_D, Glass_delta, list(Hedges_g.keys())[0], list(Hedges_g.values())[0], CI95, note))

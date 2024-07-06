@@ -12,13 +12,14 @@ Journal: Neuropsychology Review, 31(2): 221-232, 2021.
 DOI: https://doi.org/10.1007/s11065-020-09453-5
 '''
 
-import matplotlib as mpl
+from matplotlib.markers import MarkerStyle
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeffect_model, nb_studies, T_squared, p_val_text, IC95text, fail_safe_N):    
 
     ### Plot data
-    f,ax = plt.subplots()
+    f,ax = plt.subplots(figsize=(15, 15+1))
     plt.xticks(fontsize=10+4)
     ax.axvline(0, color = "red", linestyle = "--", linewidth = 1)
     ax.set_xlim(-4,10)
@@ -39,8 +40,6 @@ def plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeff
         ax.text(6, i, "{}".format("%.2f" % round(globalScores_table["d"][i],2)), fontsize=10+4)
         ax.text(6.5, i, "({}; {})".format("%.2f" % round(globalScores_table["CI95inf"][i],2), "%.2f" % round(globalScores_table["CI95sup"][i],2)), fontsize=10+4)   
 
-    #plt.savefig(r"C:\Users\GARDy\Desktop\figure_meta.png", dpi=1000)
-
     for i in range(0, nb_plots):        
         if globalScores_table["Color"][i] == "orange":
             w = round(globalScores_table["Weight"][i],2)
@@ -55,24 +54,21 @@ def plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeff
     ax.text(-3.8, -5, "Random effects model", fontweight='bold', bbox={'facecolor':'lightgray', 'alpha':0.5, 'pad':5}, fontsize = 10+4)
     ax.set_ylim(-7, nb_plots + 5)
 
-    angle = 90
-    t = mpl.markers.MarkerStyle(marker="d")
-    t._transform = t.get_transform().rotate_deg(angle)
+    t = MarkerStyle(marker="d")
+    t._transform = t.get_transform().rotate_deg(90)
     ax.scatter(randomeffect_model, -5, s = 400, marker = t, color = "crimson")
     print("mean effect size = {}".format(randomeffect_model))
     
     # figuresubtitle
     #ax.set_title("Nb studies = {} // Tau squared = {} // {} // {} // Fail Safe N = {}".format(nb_studies, round(T_squared,3), p_val_text, IC95text, fail_safe_N))
-    print("Nb studies = {} // Tau squared = {} // {} // {} // Fail Safe N = {}".format(nb_studies, round(T_squared,3), p_val_text, IC95text, fail_safe_N))
+    print("Nb studies = {} | Tau squared = {} | {} | {} | Fail Safe N = {}".format(nb_studies, round(T_squared,3), p_val_text, IC95text, fail_safe_N))
 
     ax.get_yaxis().set_ticks([])
     
+    plt.tight_layout()
     plt.show()
-        
-def export_data():
-    X = np.concatenate((list(metaplot[0]["MCI_Mean"]), list(metaplot[0]["Control_Mean"])))
-    y = np.concatenate((list(np.repeat("MCI", len(list(metaplot[0]["MCI_Mean"])))), list(np.repeat("Control", len(list(metaplot[0]["Control_Mean"]))))))
+
+if __name__ == '__main__':
     
-    data = pd.DataFrame(X,y)
-    
-    data.to_csv(r'C:\Users\GARDy\Desktop\data_model.csv', sep = ";")
+    nb_plots, globalScores_table, weight_of_studies, randomeffect_model, nb_studies, T_squared, p_val_text, IC95text, fail_safe_N = 10, pd.read_csv(r"output/globalScores_table.csv"), [0.1, 0.2, 0.3, 0.4], 0.5, 4, 0.6, 0.7, 0.8, 0.9
+    plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeffect_model, nb_studies, T_squared, p_val_text, IC95text, fail_safe_N)

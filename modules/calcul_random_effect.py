@@ -1,5 +1,6 @@
 from scipy.stats import norm
 import numpy as np
+import pandas as pd
 
 def randomEffect_calculation(d,w,k,wstar = [], globalScores_table = [], init = True):
     # Estimating Q
@@ -73,3 +74,10 @@ def randomEffect_calculation(d,w,k,wstar = [], globalScores_table = [], init = T
     IC95text = "95% CI = [{}; {}]".format(IC95total_inf, IC95total_sup)
         
     return(Mstar, T_squared,data_temp, p_val_text, p_value, IC95text, list(Y), list(W), list(Wstar))
+
+if __name__ == '__main__':
+    d, w,k, wstar = [0.5, 0.6, 0.7, 0.8], [0.1, 0.2, 0.3, 0.4], 4, [0.1, 0.2, 0.3, 0.4]
+    globalScores_table = pd.DataFrame({"Var": [0.1, 0.2, 0.3, 0.4]})
+    init = False
+
+    print(randomEffect_calculation(d,w,k,wstar,globalScores_table,init))
