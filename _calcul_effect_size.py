@@ -22,6 +22,7 @@ Created on Thu Aug 16 10:32:49 2018
 # calculate Cohen's d and Glass' delta, but it won't generate a 
 # value for Hedges's g.
 """
+
 import numpy as np
 from scipy import stats
 from scipy.stats import nct
