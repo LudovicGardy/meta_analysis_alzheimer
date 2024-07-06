@@ -19,7 +19,7 @@ from sklearn.linear_model import LinearRegression
 
 import sys
 sys.path.append(r"F:\GardyL\Python\Alzheimer_meta_analysis")
-import _calcul_effect_size
+import modules._calcul_effect_size as _calcul_effect_size
 
 ### New data frame for plots
 def shorter_dataframe(meta_data):

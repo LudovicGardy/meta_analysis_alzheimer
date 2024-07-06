@@ -16,8 +16,8 @@ import pandas as pd
 import sys
 
 sys.path.append(r"F:\GardyL\Python\Alzheimer_meta_analysis")
-import reshape_dataframe
-import calcul_meta_analysis
+import modules.reshape_dataframe as reshape_dataframe
+import modules.calcul_meta_analysis as calcul_meta_analysis
 
 if __name__ == '__main__':
     
