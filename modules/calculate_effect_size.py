@@ -35,17 +35,15 @@ def calculate_Cohens_d(mean_1, mean_2, sd_1, sd_2):
     SD_pooled = calculate_pooled_SD(sd_1, sd_2)
     Cohens_d = (mean_2 - mean_1) / SD_pooled
     Cohens_d = round(Cohens_d, 5)
-    return(Cohens_d)
+    return Cohens_d
 
 def calculate_Glass_delta(mean_1, mean_2, sd):
     SD_controlGroup = sd
     Glass_delta = (mean_2 - mean_1) / SD_controlGroup
     Glass_delta = round(Glass_delta, 5)
-    return(Glass_delta)
+    return Glass_delta
     
-def calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
-    hedge_dict_return = {}
-    
+def calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2, size_1, size_2):    
     N = size_1 + size_2
     samp1 = (size_1 - 1) *  sd_1 ** 2
     samp2 = (size_2 - 1) *  sd_2 ** 2
@@ -55,36 +53,39 @@ def calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
     Hedges_g = round(Hedges_g, 5)
     if N < 50:
         corrected_Hg = Hedges_g * ( ((N - 3) / (N - 2.25)) * np.sqrt((N - 2) / N) )
-        corrected_Hg = round(corrected_Hg, 5)
-        hedge_dict_return["Corrected Hedges' g (n < 50)"] =  corrected_Hg
-    else:
-        hedge_dict_return["Hedges' g (n > 50)"] =  Hedges_g
+        Hedges_g = corrected_Hg = round(corrected_Hg, 5)
         
-    return(hedge_dict_return)
+    return Hedges_g
 
-def calulate_confint_of_effectSize(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
-
-    d = calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2,size_1,size_2)
-    d = d[list(d.keys())[0]]    
+def calulate_confint_of_effect_size(mean_1, mean_2, sd_1, sd_2, size_1, size_2, effect_size_method):
+    if effect_size_method == 'Cohens_d':
+        d = calculate_Cohens_d(mean_1, mean_2, sd_1, sd_2)
+    elif effect_size_method == 'Glass_delta':
+        d = calculate_Glass_delta(mean_1, mean_2, sd_2)
+    elif effect_size_method == 'Hedges_g':
+        d = calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2, size_1, size_2)
     
     sigma_d = np.sqrt( ( (size_1 + size_2) / (size_1 * size_2) ) + ( d**2 / (2 * (size_1 + size_2)) ) )
     CI_inf = d - (1.96 * sigma_d)
     CI_sup = d + (1.96 * sigma_d)
     
-    CI95_ofCohen = [CI_inf, d, CI_sup]
+    CI95_of_effect_size = [CI_inf, d, CI_sup]
     
-    return(CI95_ofCohen)
+    return CI95_of_effect_size
     
-def calculate_weights(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
-    
-    d = calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2, size_1, size_2)
-    d = d[list(d.keys())[0]]   
+def calculate_weights(mean_1, mean_2, sd_1, sd_2, size_1, size_2, effect_size_method):
+    if effect_size_method == 'Cohens_d':
+        d = calculate_Cohens_d(mean_1, mean_2, sd_1, sd_2)
+    elif effect_size_method == 'Glass_delta':
+        d = calculate_Glass_delta(mean_1, mean_2, sd_2)
+    elif effect_size_method == 'Hedges_g':
+        d = calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2, size_1, size_2)
     
     # Get variance from sd
     var_d = ( (size_1 + size_2) / (size_1 * size_2) ) + ((d ** 2) / (2*(size_1 + size_2)))
     weight_of_the_study = 1 / var_d
     
-    return(var_d, weight_of_the_study)
+    return var_d, weight_of_the_study
     
 def calculate_confidence_interval(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
     
@@ -154,7 +155,7 @@ def calculate_confidence_interval(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
       
     print_interval = ["[lower: {}] [mean: {}] [upper: {}]".format(round(lower_limit,5), round(mean_diff,5), round(upper_limit,5)),[lower_limit, mean_diff, upper_limit]]
     
-    return(print_interval)
+    return print_interval
     
 if __name__ == '__main__':
 
@@ -174,4 +175,4 @@ if __name__ == '__main__':
     CI95 = calculate_confidence_interval(sampleMean_1, sampleMean_2, sampleSD_1, sampleSD_2, sampleSize_1, sampleSize_2)
     
     note = "\n #----------\n # Note\n #----------\n \n If the results are > 0, the score is higher in the control's goup. \n If the results are < 0, the score is higher in the disease's group."
-    print(" \n #----------\n # Results\n #----------\n \n Cohen's d = {} \n Glass's delta = {} \n {} = {} \n 95% CI = {} \n {}".format(Cohens_D, Glass_delta, list(Hedges_g.keys())[0], list(Hedges_g.values())[0], CI95, note))
+    print(" \n #----------\n # Results\n #----------\n \n Cohen's d = {} \n Glass's delta = {} \n d = {} \n 95% CI = {} \n {}".format(Cohens_D, Glass_delta, Hedges_g, CI95, note))

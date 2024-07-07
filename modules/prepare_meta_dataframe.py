@@ -17,9 +17,9 @@ import pandas as pd
 import numpy as np
 import modules.calculate_effect_size as calculate_effect_size
 
-def calculate_meta_data(mean1, mean2, sd1, sd2, size1, size2):
-    CI95 = calculate_effect_size.calulate_confint_of_effectSize(mean1, mean2, sd1, sd2, size1, size2)
-    Weight = calculate_effect_size.calculate_weights(mean1, mean2, sd1, sd2, size1, size2)
+def calculate_meta_data(mean1, mean2, sd1, sd2, size1, size2, effect_size_method):
+    CI95 = calculate_effect_size.calulate_confint_of_effect_size(mean1, mean2, sd1, sd2, size1, size2, effect_size_method)
+    Weight = calculate_effect_size.calculate_weights(mean1, mean2, sd1, sd2, size1, size2, effect_size_method)
     return {
         "CI95inf": CI95[0],
         "d": CI95[1],
@@ -28,7 +28,7 @@ def calculate_meta_data(mean1, mean2, sd1, sd2, size1, size2):
         "Var": Weight[0]
     }
 
-def prepare_meta_dataframe(input_data, studies_with_multiple_measures):
+def prepare_meta_dataframe(input_data, studies_with_multiple_measures, effect_size_method):
     meta_dict = {
         "Author": [], "CI95inf": [], "d": [], "CI95sup": [], "Weight": [], 
         "Var": [], "MCI_size": [], "Control_size": [], "MMSE_score": [], "Color": []
@@ -42,7 +42,8 @@ def prepare_meta_dataframe(input_data, studies_with_multiple_measures):
             effect_data = calculate_meta_data(
                 input_data["MCI_Mean"][i], input_data["Control_Mean"][i], 
                 input_data["MCI_SD"][i], input_data["Control_SD"][i], 
-                input_data["MCI_size"][i], input_data["Control_size"][i]
+                input_data["MCI_size"][i], input_data["Control_size"][i],
+                effect_size_method
             )
             
             meta_dict["Author"].append(input_data["Authors"][i])

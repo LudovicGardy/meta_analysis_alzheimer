@@ -53,8 +53,8 @@ def meta_analysis(meta_frame):
     studies = pd.Series(global_scores_table["Author"], dtype="category").cat.categories
     nb_studies = len(studies)
     
-    random_effect_results = calculate_random_effect(d_of_studies, weight_of_studies, nb_studies, global_scores_table=global_scores_table)
-    fail_safe_N = calculate_fail_safe_N(global_scores_table, random_effect_results.Y, random_effect_results.W, random_effect_results.Wstar, nb_studies)
+    random_effect_results = calculate_random_effect(np.array(d_of_studies), np.array(weight_of_studies), np.array(var_of_studies), nb_studies)
+    fail_safe_N = calculate_fail_safe_N(d_of_studies, weight_of_studies, var_of_studies, nb_studies, global_scores_table)
     
     # Comments on the plots
     plot_meta_analysis(nb_plots, global_scores_table, weight_of_studies, random_effect_results.Mstar, nb_studies, random_effect_results.T_squared, random_effect_results.p_val_text, random_effect_results.IC95text, fail_safe_N)
@@ -64,28 +64,31 @@ def meta_analysis(meta_frame):
 
     return meta_frame, fail_safe_N, global_scores_table
 
-def calculate_fail_safe_N(global_scores_table, Y, W, Wstar, nb_studies):
+def calculate_fail_safe_N(d_of_studies, weight_of_studies, var_of_studies, nb_studies, global_scores_table):
     '''
     The fail safe N is the number of studies with null effect size that would be needed to make the p-value of 
     the random effect model greater than 0.05. It is a measure of the robustness of the meta-analysis. In other 
     words, it represents the number of studies that would be needed to make the meta-analysis not significant.
     '''
 
-    count_failure = 0
-    null_diff = 0
-    mean_weight = np.mean(global_scores_table["Weight"])
-    
-    random_effect_results = calculate_random_effect(Y, W, nb_studies, Wstar, global_scores_table, init=True)
+    # Initial p-value
+    random_effect_results = calculate_random_effect(np.array(d_of_studies), np.array(weight_of_studies), np.array(var_of_studies), nb_studies)
+    Wstar = random_effect_results.Wstar
     failure_pval = random_effect_results.p_value
 
-    while failure_pval < 0.05:
-        Y.append(null_diff)
-        W.append(mean_weight)
+    count_failure = 0
+    # Add studies with null effect size until the p-value is greater than 0.05
+    while failure_pval < 0.05:  
+        null_diff = 0
+        mean_weight = np.mean(global_scores_table["Weight"])  # simulating the weight of the new 'null study' using the mean weight of real studies
+        
+        d_of_studies.append(null_diff)
+        weight_of_studies.append(mean_weight)
         Wstar.append(mean_weight)
         nb_studies += 1
         count_failure += 1
 
-        random_effect_results = calculate_random_effect(Y, W, nb_studies, Wstar, global_scores_table, init=False)
+        random_effect_results = calculate_random_effect(np.array(d_of_studies), np.array(weight_of_studies), np.array(var_of_studies), nb_studies, Wstar)
         failure_pval = random_effect_results.p_value
 
         print("Count failure... ", count_failure)
@@ -98,7 +101,7 @@ def calculate_fail_safe_N(global_scores_table, Y, W, Wstar, nb_studies):
 
 if __name__ == '__main__':
     meta_frame = pd.read_csv(r"output/meta_frame.csv")
-    meta_frame, fail_safe_N, global_scores_table = calcul_meta_analysis(meta_frame)
+    meta_frame, fail_safe_N, global_scores_table = meta_analysis(meta_frame)
     print(fail_safe_N)
     print(meta_frame)
     print("End of the script")

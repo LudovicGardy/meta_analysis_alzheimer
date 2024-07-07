@@ -28,10 +28,14 @@ def get_authors_with_multiple_measures(meta_data):
 
 if __name__ == '__main__':
 
+    ### Parameters
+    effect_size_method = 'Hedges_g' # 'Hedges_g' or 'Cohen_d' or 'Glass_delta'
+    input_data = pd.read_csv(open(r'input_data/input_data.csv','rb'))
+
+    ### Main
     if "output" not in os.listdir():
         os.mkdir("output")
 
-    input_data = pd.read_csv(open(r'input_data/input_data.csv','rb'))
     studies_with_multiple_measures = get_authors_with_multiple_measures(input_data)
-    meta_frame = prepare_meta_dataframe.prepare_meta_dataframe(input_data, studies_with_multiple_measures)  # Write 1 tables in the output/ directory if not exist: meta_frame.csv
-    meta_frame_summary, Fail_safe_N, global_scores_table = meta_analysis.meta_analysis(meta_frame)  # Write 1 table in the output/ directory if not exist: global_scores_table.csv
+    meta_frame = prepare_meta_dataframe.prepare_meta_dataframe(input_data, studies_with_multiple_measures, effect_size_method)
+    meta_frame_summary, Fail_safe_N, global_scores_table = meta_analysis.meta_analysis(meta_frame)
