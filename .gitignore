@@ -1,6 +1,10 @@
 ### Ignore these folders
 __pycache__/
 .vs/
+.venv/
+.mypy_cache/
+output/
 
 ### Ignore these files
 project_presentation.pptx
+.DS_Store

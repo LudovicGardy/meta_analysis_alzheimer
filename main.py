@@ -12,22 +12,30 @@ Journal: Neuropsychology Review, 31(2): 221-232, 2021.
 DOI: https://doi.org/10.1007/s11065-020-09453-5
 '''
 
+import os
 import pandas as pd
-import sys
+import modules.prepare_meta_dataframe as prepare_meta_dataframe
+import modules.meta_analysis as meta_analysis
 
-sys.path.append(r"F:\GardyL\Python\Alzheimer_meta_analysis")
-import reshape_dataframe
-import calcul_meta_analysis
+def get_authors_with_multiple_measures(meta_data):
+    authors_list = []
+    for i in range(len(meta_data["Authors"])):
+        authors = meta_data["Authors"][i].split(", ")
+        for author in authors:
+            if author not in authors_list:
+                authors_list.append(author)
+    return authors_list
 
 if __name__ == '__main__':
-    
-    authors_list = ["Joubert et al. 2010","Langlois et al. 2016", "Ahmed et al. 2008", "Joubert et al. 2008", "Gonzalez-Estévez et al. 2004", 
-                    "Barbeau et al. 2012", "Leyhe et al. 2010", "Clague et al. 2011", "Gardini et al. 2015", "Benoit et al. 2017",
-                    "Seidenberg et al. 2009", "Vogel et al. 2005", "Rodriguez-Ferreiro et al. 2012", "Smith JC et al. 2013", "Borg et al. 2010"]    
 
-    meta_data = pd.read_excel(open(r'F:\GardyL\Python\Alzheimer_meta_analysis\Data_meta.xlsx','rb'))
-    meta_data.head                  
+    ### Parameters
+    effect_size_method = 'Hedges_g' # 'Hedges_g' or 'Cohen_d' or 'Glass_delta'
+    input_data = pd.read_csv(open(r'input_data/input_data.csv','rb'))
 
-    meta_frame = reshape_dataframe.reshape_dataframe(meta_data, authors_list)
-    meta_frame_summary, Fail_safe_N = calcul_meta_analysis.calcul_meta_analysis(meta_frame)
+    ### Main
+    if "output" not in os.listdir():
+        os.mkdir("output")
 
+    studies_with_multiple_measures = get_authors_with_multiple_measures(input_data)
+    meta_frame = prepare_meta_dataframe.prepare_meta_dataframe(input_data, studies_with_multiple_measures, effect_size_method)
+    meta_frame_summary, Fail_safe_N, global_scores_table = meta_analysis.meta_analysis(meta_frame)
