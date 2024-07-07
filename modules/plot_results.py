@@ -16,7 +16,15 @@ from matplotlib.markers import MarkerStyle
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeffect_model, nb_studies, T_squared, p_val_text, IC95text, fail_safe_N):    
+def plot_meta_analysis(nb_plots:int, 
+                      global_scores_table:pd.DataFrame, 
+                      weight_of_studies:list,
+                      randomeffect_model_result:float,
+                      nb_studies:int,
+                      T_squared:float,
+                      p_val_text:str,
+                      IC95text:str,
+                      fail_safe_N:int):    
 
     ### Plot data
     f,ax = plt.subplots(figsize=(15, 15+1))
@@ -32,18 +40,18 @@ def plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeff
     markers_dict = {"orange": "D", "black": "o"}
     
     for i in range(0, nb_plots):
-        ax.plot([globalScores_table["CI95inf"][i],globalScores_table["CI95sup"][i]],[i,i], color = "dimgrey", linewidth = width_dict[globalScores_table["Color"][i]], zorder = 1)
-        ax.scatter(globalScores_table["d"][i], [i], color = "black", s = sizes_dict[globalScores_table["Color"][i]], marker = markers_dict[globalScores_table["Color"][i]], zorder = 2)
-        ax.text(-3.8, i, globalScores_table["Author"][i], fontsize=10+4)
-        N_subjects = int(round(globalScores_table["MCI_size"][i],0))+ int(round(globalScores_table["Control_size"][i],0))
-        ax.text(4, i, "{} ({}; {})".format(N_subjects,int(round(globalScores_table["MCI_size"][i],0)), int(round(globalScores_table["Control_size"][i],0))), fontsize = 10+4)
-        ax.text(6, i, "{}".format("%.2f" % round(globalScores_table["d"][i],2)), fontsize=10+4)
-        ax.text(6.5, i, "({}; {})".format("%.2f" % round(globalScores_table["CI95inf"][i],2), "%.2f" % round(globalScores_table["CI95sup"][i],2)), fontsize=10+4)   
+        ax.plot([global_scores_table["CI95inf"][i],global_scores_table["CI95sup"][i]],[i,i], color = "dimgrey", linewidth = width_dict[global_scores_table["Color"][i]], zorder = 1)
+        ax.scatter(global_scores_table["d"][i], [i], color = "black", s = sizes_dict[global_scores_table["Color"][i]], marker = markers_dict[global_scores_table["Color"][i]], zorder = 2)
+        ax.text(-3.8, i, global_scores_table["Author"][i], fontsize=10+4)
+        N_subjects = int(round(global_scores_table["MCI_size"][i],0))+ int(round(global_scores_table["Control_size"][i],0))
+        ax.text(4, i, "{} ({}; {})".format(N_subjects,int(round(global_scores_table["MCI_size"][i],0)), int(round(global_scores_table["Control_size"][i],0))), fontsize = 10+4)
+        ax.text(6, i, "{}".format("%.2f" % round(global_scores_table["d"][i],2)), fontsize=10+4)
+        ax.text(6.5, i, "({}; {})".format("%.2f" % round(global_scores_table["CI95inf"][i],2), "%.2f" % round(global_scores_table["CI95sup"][i],2)), fontsize=10+4)   
 
     for i in range(0, nb_plots):        
-        if globalScores_table["Color"][i] == "orange":
-            w = round(globalScores_table["Weight"][i],2)
-            w_pcent = (round(globalScores_table["Weight"][i],2) * 100) / sum(weight_of_studies)
+        if global_scores_table["Color"][i] == "orange":
+            w = round(global_scores_table["Weight"][i],2)
+            w_pcent = (round(global_scores_table["Weight"][i],2) * 100) / sum(weight_of_studies)
             ax.text(8.5, i, "{}".format("%.2f" % round(w,2)), fontsize=10+4)
             ax.text(9.1, i, "({})".format("%.2f" % round(w_pcent,2)), fontsize=10+4)
 
@@ -56,8 +64,8 @@ def plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeff
 
     t = MarkerStyle(marker="d")
     t._transform = t.get_transform().rotate_deg(90)
-    ax.scatter(randomeffect_model, -5, s = 400, marker = t, color = "crimson")
-    print("mean effect size = {}".format(randomeffect_model))
+    ax.scatter(randomeffect_model_result, -5, s = 400, marker = t, color = "crimson")
+    print("mean effect size = {}".format(randomeffect_model_result))
     
     # figuresubtitle
     #ax.set_title("Nb studies = {} // Tau squared = {} // {} // {} // Fail Safe N = {}".format(nb_studies, round(T_squared,3), p_val_text, IC95text, fail_safe_N))
@@ -69,6 +77,6 @@ def plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeff
     plt.show()
 
 if __name__ == '__main__':
-    
-    nb_plots, globalScores_table, weight_of_studies, randomeffect_model, nb_studies, T_squared, p_val_text, IC95text, fail_safe_N = 10, pd.read_csv(r"output/globalScores_table.csv"), [0.1, 0.2, 0.3, 0.4], 0.5, 4, 0.6, 0.7, 0.8, 0.9
-    plot_data_summary(nb_plots, globalScores_table, weight_of_studies, randomeffect_model, nb_studies, T_squared, p_val_text, IC95text, fail_safe_N)
+    table = pd.read_csv(r"output/global_scores_table.csv")
+    nb_plots, global_scores_table, weight_of_studies, effect_size, nb_studies, T_squared, p_val_text, IC95text, fail_safe_N = table.shape[0], table, [0.1, 0.2, 0.3, 0.4], 0.5, 4, 0.6, "p value < 999", "95% CI = [888; 999]", 999
+    plot_meta_analysis(nb_plots, global_scores_table, weight_of_studies, effect_size, nb_studies, T_squared, p_val_text, IC95text, fail_safe_N)

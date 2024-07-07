@@ -77,7 +77,7 @@ def calulate_confint_of_effectSize(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
     
 def calculate_weights(mean_1, mean_2, sd_1, sd_2, size_1, size_2):
     
-    d = calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2,size_1,size_2)
+    d = calculate_Hedges_g(mean_1, mean_2, sd_1, sd_2, size_1, size_2)
     d = d[list(d.keys())[0]]   
     
     # Get variance from sd

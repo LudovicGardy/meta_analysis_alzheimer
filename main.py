@@ -12,11 +12,12 @@ Journal: Neuropsychology Review, 31(2): 221-232, 2021.
 DOI: https://doi.org/10.1007/s11065-020-09453-5
 '''
 
+import os
 import pandas as pd
-import modules.reshape_dataframe as reshape_dataframe
-import modules.calcul_meta_analysis as calcul_meta_analysis
+import modules.prepare_meta_dataframe as prepare_meta_dataframe
+import modules.meta_analysis as meta_analysis
 
-def get_authors_list(meta_data):
+def get_authors_with_multiple_measures(meta_data):
     authors_list = []
     for i in range(len(meta_data["Authors"])):
         authors = meta_data["Authors"][i].split(", ")
@@ -26,10 +27,11 @@ def get_authors_list(meta_data):
     return authors_list
 
 if __name__ == '__main__':
-    meta_data = pd.read_csv(open(r'data/Data_meta.csv','rb'))
-    meta_data.head                  
 
-    studies_with_multiple_measures = get_authors_list(meta_data)
-    meta_frame = reshape_dataframe.reshape_dataframe(meta_data, studies_with_multiple_measures)
-    meta_frame_summary, Fail_safe_N = calcul_meta_analysis.calcul_meta_analysis(meta_frame)
+    if "output" not in os.listdir():
+        os.mkdir("output")
 
+    input_data = pd.read_csv(open(r'input_data/input_data.csv','rb'))
+    studies_with_multiple_measures = get_authors_with_multiple_measures(input_data)
+    meta_frame = prepare_meta_dataframe.prepare_meta_dataframe(input_data, studies_with_multiple_measures)  # Write 1 tables in the output/ directory if not exist: meta_frame.csv
+    meta_frame_summary, Fail_safe_N, global_scores_table = meta_analysis.meta_analysis(meta_frame)  # Write 1 table in the output/ directory if not exist: global_scores_table.csv
