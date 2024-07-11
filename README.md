@@ -53,5 +53,6 @@ _**Figure 2**_ shows the results of the meta-analysis, using a random effect mod
 
 [3] Book: Michael Borenstein, Hannah R. Rothstein, Larry V. Hedges, Julian Higgins. An Introduction to Meta-Analysis (2009). ISBN: 9780470057247
 
-LinkedIn: [Ludovic Gardy](https://www.linkedin.com/in/ludovic-gardy/)
-Doctoral thesis: [PDF](http://thesesups.ups-tlse.fr/5164/1/2021TOU30190.pdf)
+## Author
+- LinkedIn: [Ludovic Gardy](https://www.linkedin.com/in/ludovic-gardy/)
+- Doctoral thesis: [PDF](http://thesesups.ups-tlse.fr/5164/1/2021TOU30190.pdf)
