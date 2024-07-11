@@ -10,16 +10,6 @@ This program allows the user to reproduce the results explained in [Gardy et al.
 - Python 3.11
 - Python libraries: see requirements.txt
 
-### Instructions
-
-Clone the repository and install the necessary dependencies:
-
-```bash
-git clone <repository_url>
-cd Custom_colormaps
-pip install -r requirements.txt
-```
-
 ## Usage
 The procedure requires only one input file to start: here, *input_data/input_data.csv*. In this table, we find the values ​​recovered in the scientific papers included in the study. It is on the basis of these metrics that comparisons are made and the results of the meta-analysis are calculated, passing through intermediate tables which are automatically created in the *output/* folder during the procedure.
 
