@@ -1,7 +1,7 @@
 # Meta Analysis
 
 ## Description
-This program allows the user to reproduce the results explained in [Gardy et al., 2021], and [Joubert et al., 2021]. User can use the same process and code to reproduce our results or to perform a new meta-analysis on other data.
+This program allows the user to reproduce the results explained in [L. Gardy et al., 2021], and [S. Joubert et al., 2021]. User can use the same process and code to reproduce our results or to perform a new meta-analysis on other data.
 
 ## Installation
 
